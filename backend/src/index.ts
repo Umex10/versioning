@@ -1,66 +1,20 @@
-import express, { Request, Response } from 'express';
-import fs from 'fs';
+import express from 'express';
 import cors from 'cors';
-import path from 'path';
+import v1Routes from './routes/v1';
+import v2Routes from './routes/v2';
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-const filePath = path.join(__dirname, '../data/tasks.json');
+// CRUD | Task (string)
+app.use("/api/v1", v1Routes);
 
-app.get("/tasks", (req: Request, res: Response) => {
-  const data = fs.readFileSync(filePath, "utf-8");
-  const tasks: string[] = JSON.parse(data);
-
-  res.json(tasks);
-})
+// CRUD | Task ({id, title, checked, createdAt})
+app.use("/api/v2", v2Routes);
 
 app.listen(5000, () => {
-  console.log("The server is running!");
+  console.log(`Server is running on http://localhost:5000`);
+  console.log(`V1 is running on http://localhost:5000/api/v1/tasks`);
+  console.log(`V2 is running on http://localhost:5000/api/v2/tasks`);
 });
-
-app.post("/tasks", (req: Request, res: Response) => {
-  const data = fs.readFileSync(filePath, "utf-8");
-  const tasks: string[] = JSON.parse(data);
-
-  const { task } = req.body;
-
-  if (!task) {
-    return res.status(400).json({ error: "No task provided" });
-  }
-
-  tasks.push(task);
-
-  fs.writeFileSync(filePath, JSON.stringify(tasks, null, 2), "utf-8");
-
-  res.status(201).json({ message: "Task was created:", data: tasks })
-});
-
-app.put("/tasks/:id", (req: Request, res: Response) => {
-  const id = req.params.id;
-
-  const { newTaskName } = req.body;
-
-  const data = fs.readFileSync(filePath, "utf-8");
-  const tasks: string[] = JSON.parse(data);
-
-  tasks[Number(id)] = newTaskName;
-
-  fs.writeFileSync(filePath, JSON.stringify(tasks, null, 2), "utf-8");
-  res.status(200).json({ message: "Task was updated:", data: tasks })
-
-})
-
-app.delete("/tasks/:id", (req: Request, res: Response) => {
-  const id = req.params.id;
-
-  const data = fs.readFileSync(filePath, "utf-8");
-  const tasks: string[] = JSON.parse(data);
-
-  tasks.splice(Number(id), 1);
-
-  fs.writeFileSync(filePath, JSON.stringify(tasks, null, 2), "utf-8");
-  res.status(201).json({ message: "Task was deleted!", data: tasks })
-})
-
