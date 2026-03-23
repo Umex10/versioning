@@ -8,49 +8,75 @@ function App() {
 
   const [taskName, setTaskName] = useState("");
   const [taskList, setTaskList] = useState<string[]>([]);
+  const url = "http://localhost:5000/tasks";
 
   useEffect(() => {
-    const rawData = localStorage.getItem("tasks");
 
-    if (rawData) {
+    const getTasks = async () => {
       try {
-        const data = JSON.parse(rawData);
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("Error while loading the initial tasks");
+
+        const data = await response.json();
+
         setTaskList(data);
       } catch (error) {
-        console.error("Fehler beim Laden aus dem LocalStorage:", error);
-        setTaskList([]);
+        console.error(error);
       }
-    }
+    };
+
+    getTasks();
   }, []);
 
-  const updateLocalStorage = (updatedTaskList: string[]) => {
-    try {
-      localStorage.setItem("tasks", JSON.stringify(updatedTaskList));
-
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  const onSend = async () => {
+  const onCreate = async () => {
 
     if (taskName.trim().length <= 3) {
       alert("We need at least 3 characters for the creation of a task!")
     }
 
-    const updatedTaskList = [...taskList, taskName];
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify({ task: taskName }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-    setTaskList(updatedTaskList);
-    setTaskName("");
+      if (!res.ok) {
+        throw new Error("Error while creating new task!");
+      }
 
-    updateLocalStorage(updatedTaskList)
+      const dataJson = await res.json();
+
+      console.log("Message while creating the task from backend")
+
+      setTaskList(dataJson.data);
+      setTaskName("");
+    } catch (error) {
+      console.error(error);
+    }
   }
 
-  const onDelete = (taskToDelete: string) => {
-    const updatedTaskList = taskList.filter(task => task !== taskToDelete);
+  const onDelete = async (taskIdToDelete: number) => {
+    try {
+      const res = await fetch(`${url}/${taskIdToDelete}`, {
+        method: "DELETE",
+      });
 
-    setTaskList(updatedTaskList);
-    updateLocalStorage(updatedTaskList)
+      if (!res.ok) {
+        throw new Error("Error while creating new task!");
+      }
+
+      const dataJson = await res.json();
+
+      console.log("Message while creating the task from backend")
+
+      setTaskList(dataJson.data);
+      setTaskName("");
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (
@@ -66,7 +92,7 @@ function App() {
             value={taskName}
             onChange={(e) => setTaskName(e.currentTarget.value)}
             className='border-1 rounded-lg p-2' />
-          <button disabled={taskName.length <= 3} onClick={() => onSend()} className={`flex flex-row gap-2 ${taskName.length <= 3 ? "text-gray-400" : "text-black"}`}>
+          <button disabled={taskName.length <= 3} onClick={() => onCreate()} className={`flex flex-row gap-2 ${taskName.length <= 3 ? "text-gray-400" : "text-black"}`}>
             <span className='font-bold'>
               Add
             </span>
@@ -86,7 +112,7 @@ function App() {
 
               <div className='flex flex-row gap-2'>
                 <button className='hover:bg-violet-400 transition duration-300 ease-out rounded-lg'
-                  onClick={() => onDelete(task)}>
+                  onClick={() => onDelete(index)}>
                   <Trash></Trash>
                 </button>
               </div>
