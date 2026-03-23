@@ -40,16 +40,15 @@ app.post("/tasks", (req: Request, res: Response) => {
 app.put("/tasks/:id", (req: Request, res: Response) => {
   const id = req.params.id;
 
-  const { updatedTask } = req.body;
+  const { newTaskName } = req.body;
 
   const data = fs.readFileSync(filePath, "utf-8");
   const tasks: string[] = JSON.parse(data);
 
-  tasks[Number(id)] = updatedTask;
+  tasks[Number(id)] = newTaskName;
 
   fs.writeFileSync(filePath, JSON.stringify(tasks, null, 2), "utf-8");
-
-  res.status(200).json({ message: "Task was updated:", updatedTask })
+  res.status(200).json({ message: "Task was updated:", data: tasks })
 
 })
 
