@@ -1,35 +1,41 @@
 import { useEffect, useState } from 'react'
 
+/**
+ * Custom React hook for managing V1 tasks (CRUD operations).
+ * @returns {object} V1 task handlers and state
+ */
 export const useV1Hooks = () => {
   const [v1Taskname, setV1TaskName] = useState("");
   const [v1Tasklist, setV1TaskList] = useState<string[]>([]);
   const v1BaseURL = "http://localhost:5000/api/v1/tasks";
 
-  useEffect(() => {
 
+  useEffect(() => {
+    /**
+     * Fetch all tasks from the backend on mount.
+     */
     const getTasks = async () => {
       try {
         const res = await fetch(v1BaseURL);
         if (!res.ok) throw new Error("Error while loading the initial tasks");
-
         const data = await res.json();
-
         setV1TaskList(data);
       } catch (error) {
         console.error(error);
       }
     };
-
     getTasks();
   }, []);
 
-  const v1Create = async () => {
 
+  /**
+   * Create a new task and update the list.
+   */
+  const v1Create = async () => {
     if (v1Taskname.trim().length <= 3) {
       alert("We need at least 3 characters for the creation of a task!");
       return;
     }
-
     try {
       const res = await fetch(v1BaseURL, {
         method: "POST",
@@ -38,13 +44,10 @@ export const useV1Hooks = () => {
           "Content-Type": "application/json",
         },
       });
-
       if (!res.ok) {
         throw new Error("Error while creating new task!");
       }
-
       const dataJson = await res.json();
-
       setV1TaskList(dataJson.data);
       setV1TaskName("");
     } catch (error) {
@@ -52,18 +55,20 @@ export const useV1Hooks = () => {
     }
   }
 
+
+  /**
+   * Delete a task by index and update the list.
+   * @param {number} taskIndexToDelete
+   */
   const v1Delete = async (taskIndexToDelete: number) => {
     try {
       const res = await fetch(`${v1BaseURL}/${taskIndexToDelete}`, {
         method: "DELETE",
       });
-
       if (!res.ok) {
         throw new Error("Error while deleting the task!");
       }
-
       const dataJson = await res.json();
-
       setV1TaskList(dataJson.data);
       setV1TaskName("");
     } catch (error) {
@@ -71,9 +76,18 @@ export const useV1Hooks = () => {
     }
   }
 
-  const v1Update = async (taskIndexToUpdate: number) => {
 
+  /**
+   * Update a task by index and update the list.
+   * @param {number} taskIndexToUpdate
+   */
+  const v1Update = async (taskIndexToUpdate: number) => {
     const newTaskName = prompt("Enter new task name:");
+
+    if (newTaskName && newTaskName.trim().length <= 3) {
+      alert("We need at least 3 characters for the creation of a task!")
+      return;
+    }
 
     try {
       const res = await fetch(`${v1BaseURL}/${taskIndexToUpdate}`, {
@@ -83,13 +97,10 @@ export const useV1Hooks = () => {
           "Content-Type": "application/json",
         },
       });
-
       if (!res.ok) {
         throw new Error("Error while updating the task!");
       }
-
       const dataJson = await res.json();
-
       setV1TaskList(dataJson.data);
       setV1TaskName("");
     } catch (error) {
@@ -97,5 +108,5 @@ export const useV1Hooks = () => {
     }
   }
 
-  return {v1Create, v1Delete, v1Update, v1Taskname, v1Tasklist, setV1TaskName}
+  return { v1Create, v1Delete, v1Update, v1Taskname, v1Tasklist, setV1TaskName }
 }
