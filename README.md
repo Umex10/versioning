@@ -10,10 +10,68 @@ Versionierung in Webservices bedeutet, dass verschiedene Versionen einer API par
 
 ---
 
+## Technologiestack
+
+| Bereich | Technologie |
+|---|---|
+| Backend | Node.js, Express 5, TypeScript, ts-node, nodemon |
+| Frontend | React 19, Vite, TypeScript, Tailwind CSS, lucide-react |
+| Testing | Playwright |
+| Datenspeicherung | JSON-Dateien (kein Datenbankserver erforderlich) |
+
+---
+
+## Architekturüberblick
+
+Das Projekt ist in zwei voneinander unabhängige Teile gegliedert: ein **Backend** (REST-API) und ein **Frontend** (React-SPA). Beide kommunizieren ausschließlich über HTTP.
+
+```
+┌──────────────────────────────────────────────────┐
+│                    Frontend                       │
+│             React + Vite  (Port 5173)             │
+│                                                   │
+│   ┌─────────────────┐   ┌──────────────────────┐  │
+│   │   V1-Ansicht    │   │     V2-Ansicht        │  │
+│   │  (use-v1.ts)    │   │   (use-v2.ts)         │  │
+│   └────────┬────────┘   └──────────┬────────────┘  │
+└────────────┼───────────────────────┼───────────────┘
+             │ HTTP GET/POST/DELETE  │ HTTP GET/POST/PUT/DELETE
+             ▼                      ▼
+┌──────────────────────────────────────────────────┐
+│                    Backend                        │
+│             Express 5  (Port 5000)                │
+│                                                   │
+│   ┌─────────────────┐   ┌──────────────────────┐  │
+│   │  /api/v1/tasks  │   │   /api/v2/tasks       │  │
+│   │  (routes/v1.ts) │   │   (routes/v2.ts)      │  │
+│   └────────┬────────┘   └──────────┬────────────┘  │
+│            │                       │               │
+│   ┌────────┴────────┐   ┌──────────┴────────────┐  │
+│   │ v1_tasks.json   │   │   v2_tasks.json        │  │
+│   └─────────────────┘   └──────────────────────┘  │
+└──────────────────────────────────────────────────┘
+```
+
+---
+
 ## Startanleitung
 
 ### Voraussetzungen
-- Node.js und npm müssen installiert sein
+- Node.js (v18 oder neuer) und npm müssen installiert sein
+
+### Ports
+
+| Dienst | Port | URL |
+|---|---|---|
+| Backend (Express) | 5000 | http://localhost:5000 |
+| Frontend (Vite) | 5173 | http://localhost:5173 |
+
+### Umgebungsvariablen (ENV)
+
+Dieses Projekt benötigt **keine** `.env`-Datei. Alle relevanten Werte (Ports, Pfade) sind direkt im Code hinterlegt:
+- Backend-Port: `5000` (in `backend/src/index.ts`)
+- Frontend-Dev-Port: `5173` (Vite-Standard)
+- Datendateien: `backend/data/v1_tasks.json` und `backend/data/v2_tasks.json`
 
 ### Backend starten
 1. In das Backend-Verzeichnis wechseln:

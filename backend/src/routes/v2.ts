@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import fs from 'fs';
 import path from 'path';
+import { readJsonFile } from '../utils';
 
 interface Task {
   id: string,
@@ -18,8 +19,7 @@ const filePath = path.join(__dirname, '../../data/v2_tasks.json');
  * @returns {Task[]} Array of tasks
  */
 const readTasks = (): Task[] => {
-  const data = fs.readFileSync(filePath, "utf-8");
-  return JSON.parse(data);
+  return readJsonFile<Task>(filePath);
 };
 
 
@@ -66,7 +66,7 @@ router.put("/tasks/:id/check", (req: Request, res: Response) => {
   // use the existing boolean and revert it
   task.checked = !task.checked;
   fs.writeFileSync(filePath, JSON.stringify(tasks, null, 2), "utf-8");
-  res.status(200).json({ message: "Task was created:", data: tasks })
+  res.status(200).json({ message: "Task was updated:", data: tasks })
 });
 
 
@@ -98,7 +98,7 @@ router.delete("/tasks/:id", (req: Request, res: Response) => {
   if (!task) return res.status(404).json({ error: "Task not found" });
   const updatedTasks = tasks.filter(t => t.id !== id);
   fs.writeFileSync(filePath, JSON.stringify(updatedTasks, null, 2), "utf-8");
-  res.status(201).json({ message: "Task was deleted!", data: updatedTasks })
+  res.status(200).json({ message: "Task was deleted!", data: updatedTasks })
 });
 
 export default router;
