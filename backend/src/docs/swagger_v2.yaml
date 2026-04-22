@@ -1,0 +1,187 @@
+openapi: 3.0.0
+info:
+  title: Task Manager API (v2)
+  version: 2.0.0
+  description: |
+    V2 des Task-Managers. 
+    Highlights: 
+    - ID-basierter Zugriff
+    - Komplexe Task-Objekte
+    - Toggle-Funktion für den Status
+
+servers:
+  - url: http://localhost:5000/api/v2
+
+paths:
+  /tasks:
+    get:
+      summary: Alle Tasks abrufen
+      description: Liefert eine Liste aller Tasks als Objekte zurück.
+      responses:
+        '200':
+          description: Erfolg
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+
+    post:
+      summary: Neuen Task erstellen
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+              properties:
+                title:
+                  type: string
+                  example: "Neues Projekt starten"
+      responses:
+        '201':
+          description: Task erfolgreich erstellt
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /tasks/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: Die eindeutige ID des Tasks
+        schema:
+          type: string
+        example: "1713773542000"
+    put:
+      summary: Titel eines Tasks aktualisieren
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - newTaskTitle
+              properties:
+                newTaskTitle:
+                  type: string
+                  example: "Einkaufsliste aktualisiert"
+      responses:
+        '200':
+          description: Titel wurde erfolgreich geändert
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      summary: Task löschen
+      responses:
+        '200':
+          description: Task erfolgreich deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /tasks/{id}/check:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    put:
+      summary: Status (checked) umschalten
+      description: Invertiert den aktuellen boolean-Wert von 'checked'.
+      responses:
+        '200':
+          description: Status erfolgreich getoggled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+components:
+  schemas:
+    # Basic instance of Task
+    Task:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        checked:
+          type: boolean
+        createdAt:
+          type: integer
+          format: int64
+      example:
+        id: "1713773542000"
+        title: "Swagger Hausübung machen"
+        checked: false
+        createdAt: 1713773542000
+
+    # Default-resonse
+    TaskResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Task'
+      example:
+        message: "Operation successful"
+        data: 
+          - id: "1713773542000"
+            title: "Swagger Hausübung machen"
+            checked: true
+            createdAt: 1713773542000
+
+    # Error
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+      example:
+        error: "Etwas ist schiefgelaufen"
+
+  responses:
+    # Re-usable http resones
+    NotFound:
+      description: Ressource nicht gefunden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "Task not found"
+            
+    BadRequest:
+      description: Fehlerhafte Anfrage
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "No new title provided"

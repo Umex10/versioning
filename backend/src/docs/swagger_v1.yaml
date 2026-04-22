@@ -1,0 +1,119 @@
+openapi: 3.0.0
+info:
+  title: Task Manager API (v1)
+  version: 1.0.0
+  description: V1 des Task-Managers (Hausübung)
+
+servers:
+  - url: http://localhost:5000/api/v1
+
+paths:
+  /tasks:
+    get:
+      summary: Alle Tasks abrufen
+      responses:
+        '200':
+          description: Eine Liste von Tasks wurde erfolgreich geladen
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                example: ["Einkaufen", "Swagger lernen"]
+
+    post:
+      summary: Neuen Task erstellen
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                task:
+                  type: string
+              example:
+                task: "Hausübung fertigstellen"
+      responses:
+        '201':
+          description: Task erfolgreich erstellt
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      type: string
+                example:
+                  message: "Task was created:"
+                  data: ["Einkaufen", "Hausübung fertigstellen"]
+        '400':
+          description: Ungültige Anfrage (Task fehlt im Body)
+
+  /tasks/{index}:
+    parameters:
+      - name: index
+        in: path
+        required: true
+        schema:
+          type: integer
+        example: 0
+    put:
+      summary: Task aktualisieren
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                newTaskName:
+                  type: string
+              example:
+                newTaskName: "Wäsche waschen"
+      responses:
+        '200':
+          description: Task erfolgreich aktualisiert
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      type: string
+                example:
+                  message: "Task was updated:"
+                  data: ["Wäsche waschen", "Hausübung fertigstellen"]
+        '404':
+          description: Task unter diesem Index nicht gefunden
+
+    delete:
+      summary: Task löschen
+      responses:
+        '200':
+          description: Task wurde gelöscht
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      type: string
+                example:
+                  message: "Task was deleted!"
+                  data: ["Hausübung fertigstellen"]
+        '404':
+          description: Task unter diesem Index nicht gefunden

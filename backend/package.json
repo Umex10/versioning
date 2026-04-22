@@ -15,12 +15,16 @@
     "@tailwindcss/postcss": "^4.2.2",
     "cors": "^2.8.6",
     "express": "^5.2.1",
-    "postcss": "^8.5.8"
+    "postcss": "^8.5.8",
+    "swagger-ui-express": "^5.0.1",
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "^25.5.0",
+    "@types/swagger-ui-express": "^4.1.8",
+    "@types/yamljs": "^0.2.34",
     "nodemon": "^3.1.14",
     "ts-node": "^10.9.2",
     "typescript": "^6.0.2"
