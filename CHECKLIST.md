@@ -4,7 +4,7 @@
 - [x] Zweck des Webservices klar beschrieben
 - [x] Architekturüberblick
 - [x] Setup-Anleitung (Installation, Start, Ports, ENV-Variablen)
-- [ ] Beispiel-Requests
+- [X] Beispiel-Requests
 - [x] Technologiestack genannt
 
 ## API-Design & Struktur
@@ -13,8 +13,8 @@
 - [x] Ressourcenorientierung
 - [X] Versionierung (optional, aber positiv)
 
-## Implementierungsqualität & Code-Struktur
-- [ ] Trennung / Aufteilung (Controller, Service, etc.)
+## Imlementierungsqualität & Code-Struktur
+- [ ] Trennung / Aufteilung (Controller, Service, etc.) - Business-Logik ist direkt in Routes, keine Service-Layer
 - [X] Keine riesigen Monolith-Dateien
 - [X] Lesbarer Code
 - [X] Keine unnötige Duplikation
@@ -33,19 +33,19 @@
 - [X] Keine unkontrollierten 500er
 
 ## Testing
-- [X] Unit- oder Integrationstests
+- [X] Unit- oder Integrationstests (Playwright e2e-Tests vorhanden)
 - [X] Testbare Services
 - [X] Automatisierbarkeit
-- [ ] Coverage nachvollziehbar
+- [ ] Coverage nachvollziehbar - Keine Coverage da keine unit tests geschrieben wurden
 
 ## Dokumentation der Endpunkte
-- [ ] Swagger / OpenAPI oder gleichwertige Dokumentation
-- [ ] Beispiel-Requests & Responses
-- [ ] Parameterbeschreibung
-- [ ] Response-Struktur erklärt
+- [X] Swagger / OpenAPI oder gleichwertige Dokumentation
+- [X] Beispiel-Requests & Responses
+- [X] Parameterbeschreibung
+- [X] Response-Struktur erklärt
 
 ## Demo & Nachvollziehbarkeit
-- [ ] Konkretes Demo-Szenario
-- [ ] Beispiel-Use-Case
-- [ ] Postman-Collection oder curl-Beispiele
-- [ ] Klarer Ablauf zur Demonstration
+- [ ] Konkretes Demo-Szenario - Nicht dokumentiert
+- [ ] Beispiel-Use-Case - Nicht dokumentiert
+- [ ] Postman-Collection oder curl-Beispiele - curl-Beispiele im README, aber keine .json-Collection
+- [ ] Klarer Ablauf zur Demonstration - Nicht dokumentiert

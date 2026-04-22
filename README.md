@@ -115,6 +115,25 @@ Dieses Projekt benötigt **keine** `.env`-Datei. Alle relevanten Werte (Ports, P
   ```
   In V1 ist ein Task einfach nur ein String (z.B. "Einkaufen gehen").
 
+#### Beispiel-Requests V1
+
+**Alle Tasks abrufen:**
+```bash
+curl -X GET http://localhost:5000/api/v1/tasks
+```
+
+**Neuen Task hinzufügen:**
+```bash
+curl -X POST http://localhost:5000/api/v1/tasks \
+  -H "Content-Type: application/json" \
+  -d '"Einkaufen gehen"'
+```
+
+**Task löschen (nach Index):**
+```bash
+curl -X DELETE http://localhost:5000/api/v1/tasks/0
+```
+
 ### V2 – Erweiterte Task-Verwaltung
 - **Endpunkte:** `/api/v2/tasks`
 - **Task-Datenstruktur:**
@@ -127,6 +146,32 @@ Dieses Projekt benötigt **keine** `.env`-Datei. Alle relevanten Werte (Ports, P
   }
   ```
   In V2 ist ein Task ein Objekt mit eindeutiger ID, Titel, Status (abgehakt oder nicht) und Erstellungsdatum.
+
+#### Beispiel-Requests V2
+
+**Alle Tasks abrufen:**
+```bash
+curl -X GET http://localhost:5000/api/v2/tasks
+```
+
+**Neuen Task hinzufügen:**
+```bash
+curl -X POST http://localhost:5000/api/v2/tasks \
+  -H "Content-Type: application/json" \
+  -d '{"title": "Neuer Task"}'
+```
+
+**Task aktualisieren (abhaken/Status ändern):**
+```bash
+curl -X PUT http://localhost:5000/api/v2/tasks/1711200000000 \
+  -H "Content-Type: application/json" \
+  -d '{"checked": true}'
+```
+
+**Task löschen:**
+```bash
+curl -X DELETE http://localhost:5000/api/v2/tasks/1711200000000
+```
 
 ---
 

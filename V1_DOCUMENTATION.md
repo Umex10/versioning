@@ -40,7 +40,7 @@ Mit diesem Endpunkt kann ein bestehender Task bearbeitet werden. Die ID des Task
 
 **Pfad:** `PUT /tasks/:id`
 
-![Edit Task](screenshots/v1/v1_editTask.png)
+![Edit Task](screenshots/v1/v1_updateTask.png)
 
 ### Zusammenfassung
 
