@@ -118,7 +118,7 @@ function App() {
       </main>
 
       <footer className='mt-auto py-8 text-center border-t border-gray-700 text-gray-500 text-xs'>
-        <p><span className='text-violet-400'>Umejr Dzinovic</span> — Taskex Exercise</p>
+        <a href='https://github.com/Umex10'><span className='text-violet-400 hover:underline'>Umejr Dzinovic</span> — Taskex Exercise</a>
       </footer>
     </div>
   )
