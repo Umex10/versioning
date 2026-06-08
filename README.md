@@ -88,6 +88,13 @@ Dieses Projekt benötigt **keine** `.env`-Datei. Alle relevanten Werte (Ports, P
 	```
 	Der Server läuft auf http://localhost:5000
 
+#### Swagger UI öffnen
+Nachdem der Backend-Server läuft, kann die interaktive API-Dokumentation über Swagger UI aufgerufen werden:
+- **V1 Swagger:** http://localhost:5000/api/v1/docs
+- **V2 Swagger:** http://localhost:5000/api/v2/docs
+
+Hier können alle verfügbaren Endpoints getestet werden, ohne separate curl-Befehle zu verwenden.
+
 ### Frontend starten
 1. In das Frontend-Verzeichnis wechseln:
 	```bash
